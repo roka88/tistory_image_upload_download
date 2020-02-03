@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>이미지 업로드 페이지</title>
+</head>
+<body>
+
+<img id="image" style="display:block;width:400px;height:200px;"/>
+<input type="file" name={"img"} accept="image/jpg, image/jpeg" onchange="fileUploadChange(this.files)"/>
+
+</body>
+
+
+<script>
+    function fileUploadChange(files) {
+        const file = files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const headers = {
+            "Content-Type": "multipart/form-data",
+        };
+
+        axios.create({
+            baseURL: "http://localhost:8080",
+        }).post('/image', formData, {
+            headers: headers,
+        }).then(function (response) {
+            document.getElementById("image").src = "http://localhost:8080/images/"+response.data.message;
+        }).catch(function (error) {
+            alert(error.response.data.message);
+        });
+    }
+
+</script>
+
+</html>
